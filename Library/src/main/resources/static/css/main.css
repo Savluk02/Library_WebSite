@@ -1,0 +1,120 @@
+body {
+    background-color: #111;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #333;
+    text-align: left;
+}
+
+body {
+    display: block;
+}
+
+header{
+    align-items: center;
+    display: flex;
+    padding: 15px;
+    flex-wrap: wrap;
+
+}
+.main-container .content {
+    flex-grow: 1;
+}
+.mainContainer {
+    background-color: #1f1f1f;
+    box-shadow: none;
+}
+main{
+    display: block;
+}
+.mainContainer {
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 940px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.logo{
+    width: 70px;
+    height: 70px;
+    position: center;
+}
+
+.logo-text{
+    font-family: monospace;
+    font-size: 26px;
+    color: #04AA6D;
+    padding-right: 10px;
+    margin-bottom: 20px;
+}
+.logo-name{
+    display: flex;
+    align-items: center;
+    height: 70px; width: 60%;
+}
+
+.menu{
+    background-color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    overflow: hidden;
+
+
+}
+
+.menu a{
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.menu a:hover{
+    background-color: #ddd;
+    color: black;
+}
+
+.menu a.active{
+    background-color: #04AA6D;
+    color: white;
+}
+h2{
+    display: block;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-top: 0;
+    color: white;
+}
+
+
+
+a {
+    color: #00da8d;
+}
+a {
+    color: #008e5c;
+    text-decoration: none;
+    background-color: transparent;
+}

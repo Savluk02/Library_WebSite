@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Головна</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/author.css}" rel="stylesheet">
+    <link th:href="@{/css/authorInfo.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mainContainer">
+    <header>
+        <div class="logo-name">
+            <a th:href="@{/main/main}">
+                <img class="logo" th:src="@{/css/book.png}" alt="" src="../../static/css/book.png">
+            </a>
+            <p class="logo-text">Library</p>
+        </div>
+        <div class="menu">
+            <a class="active" th:href="@{/main/main}">Головна</a>
+            <a th:href="@{/book/book}">Моя Бібліотека</a>
+            <a th:href="@{/person/person}">[[${#request.remoteUser}]]</a>
+        </div>
+    </header>
+
+    <main class="content">
+
+        <ul class="breadcrumb">
+            <li>
+                <a th:href="@{../main/main}">Головна Бібліотека</a>
+                <span class="divider" >/</span>
+            </li>
+            <li> Ім'я</li>
+        </ul>
+
+        <h1> Ім'я </h1>
+
+        <article class="author-info">
+            <div class="author-portrait">
+                <div class="img-wrapper" >
+                    <img th:if="${author.imageAuthor != null}" th:src="@{'/author/display-author-image/' + ${author.id}}" alt="Author Photo" />
+                    <img th:unless="${author.imageAuthor != null}" th:src="@{/css/rowling.jpg}" alt="Author Photo12e3" />
+
+                </div>
+            </div>
+
+
+            <div class="author-details">
+                <h3> Книги Ім'я</h3>
+                <ul class="disc">
+                    <li>
+                        ::before
+                        <a th:href="@{/main/main}"> Ім'я </a>
+                    </li>
+                </ul>
+            </div>
+        </article>
+        <p>ID автора: <span th:text="${author.id}"></span></p>
+
+        <a th:href="@{../author/{authorId}/addBook(authorId=${author.id})}">Додати книгу</a>
+        <form th:method="POST" th:action="@{/author/{id}(id=${author.getId()})}">
+            <input type="hidden" name="_method" value="DELETE" />
+            <input type="submit" value="Delete"/>
+        </form>
+    </main>
+</div>
+</body>
+</html>

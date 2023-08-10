@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Author</title>
+    <link  th:href="@{/css/main.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+<div class="container mainContainer">
+    <header>
+        <div class="logo-name">
+            <a th:href="@{/main/main}" >
+                <img class="logo" th:src="@{/css/book.png}" alt="" src="../../static/css/book.png">
+            </a>
+            <p class="logo-text">Library</p>
+        </div>
+        <div class="menu">
+            <a class="active" th:href="@{/main/main}">Головна</a>
+            <a th:href="@{/book/book}">Моя Бібліотека</a>
+            <a th:href="@{/person/person}">[[${#request.remoteUser}]]</a>
+        </div>
+    </header>
+
+    <h2>Додайте автора і його книгу</h2>
+
+    <form th:method="POST" th:action="@{/author/{authorId}/addBook(authorId=${author.id})}" th:object="${book}">
+        <h3>Add Book</h3>
+
+        <label for="nameOfBook">Веддіть назву книги: </label>
+        <input type="text" th:field="*{nameOfBook}" id="nameOfBook"/>
+        <div style="color: red" th:if="${#fields.hasErrors('nameOfBook')}" th:errors="*{nameOfBook}">Помилка при введені
+            пароля
+        </div>
+        <label for="dateOfBook">Введіть дату видання книги: </label>
+        <input type="date" th:field="*{dateOfBook}" id="dateOfBook"/>
+        <div style="color: red" th:if="${#fields.hasErrors('dateOfBook')}" th:errors="*{dateOfBook}">Помилка введення
+            ім'я
+            користувача
+        </div>
+        <label for="numOfPages">Введіть кількість сторінок: </label>
+        <input type="number" th:field="*{numOfPages}" id="numOfPages"/>
+        <div style="color: red" th:if="${#fields.hasErrors('numOfPages')}" th:errors="*{numOfPages}">Помилка при введені
+            email
+        </div>
+        <button type="submit">ADD !</button>
+    </form>
+
+</div>
+</body>
+</html>

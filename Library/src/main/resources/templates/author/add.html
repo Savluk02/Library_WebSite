@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Author</title>
+    <link  th:href="@{/css/main.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+<div class="container mainContainer">
+    <header>
+        <div class="logo-name">
+            <a th:href="@{/main/main}" >
+                <img class="logo" th:src="@{/css/book.png}" alt="" src="../../static/css/book.png">
+            </a>
+            <p class="logo-text">Library</p>
+        </div>
+        <div class="menu">
+            <a class="active" th:href="@{/main/main}">Головна</a>
+            <a th:href="@{/book/book}">Моя Бібліотека</a>
+            <a th:href="@{/person/person}">[[${#request.remoteUser}]]</a>
+        </div>
+    </header>
+
+    <form th:method="POST" th:action="@{/author/add}" enctype="multipart/form-data" th:object="${author}" >
+        <h3>Add Author</h3>
+
+        <label for="dateOfBirth">Веддіть дату народження: </label>
+        <input type="text" th:field="*{dateOfBirth}" id="dateOfBirth"/>
+        <div style="color: red" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{password}">Помилка при введені
+            пароля
+        </div>
+        <label for="fullName">Введіть ім'я автора: </label>
+        <input type="text" th:field="*{fullName}" id="fullName"/>
+        <div style="color: red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{username}">Помилка введення
+            ім'я
+            користувача
+        </div>
+        <label for="national">Введіть національність: </label>
+        <input type="text" th:field="*{national}" id="national"/>
+        <div style="color: red" th:if="${#fields.hasErrors('national')}" th:errors="*{email}">Помилка при введені
+            email
+        </div>
+
+        <label for="imageAuthor">Завантажте фотографію</label>
+        <input type="file" th:field="*{imageAuthor}" id="imageAuthor" name="imageAuthor"  accept="image/jpeg, image/png" />
+        <button type="submit">ADD !</button>
+    </form>
+
+</div>
+</body>
+</html>

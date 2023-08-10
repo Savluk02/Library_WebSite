@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Головна</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/author.css}" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/main.css">
+</head>
+<body>
+<div class="container mainContainer">
+    <header>
+        <div class="logo-name">
+            <a th:href="@{/main/main}">
+                <img class="logo" th:src="@{/css/book.png}" alt="" src="../../static/css/book.png">
+            </a>
+            <p class="logo-text">Library</p>
+        </div>
+        <div class="menu">
+            <a class="active" th:href="@{/main/main}">Головна</a>
+            <a th:href="@{/book/book}">Моя Бібліотека</a>
+            <a th:href="@{/person/person}">[[${#request.remoteUser}]]</a>
+        </div>
+    </header>
+
+    <form class="addAuthor" th:action="@{../author/add}">
+        <button type="submit">Add Author</button>
+    </form>
+    <main class="content">
+        <h2>Наші улюблені автори</h2>
+        <!--    class="img-wrapper-picture"-->
+        <nav class="authors-list">
+            <div class="author-card" th:each="catalog : ${author}">
+                <a th:href="@{../author/{id}(id=${catalog.getId()})}">
+                        <span class="img-wrapper">
+                            <img th:src="@{/css/rowling.jpg}" alt=""
+                                 src="../../static/css/rowling.jpg">
+                        </span>
+                    <span class="author-book" th:text="${catalog.getFullName()}">author</span>
+                </a>
+                <ul class="author-books" th:each="book : ${catalog.bookList}" ></ul>
+                    <li th:href="@{../main/main}" >
+                        <span class="author-book" th:text="${book.nameOfBook}">author</span>
+                    </li>
+            </div>
+        </nav>
+    </main>
+</div>
+</body>
+</html>
