@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -40,11 +41,24 @@ public class AuthorController {
         return "author/add";
     }
 
-
+//Створити html сторінку для пошуку
+//   Написати запит до Google Books
     @PostMapping("/add")
-    public String addAuthor(@ModelAttribute("author") Author author, @RequestParam("imageAuthor") MultipartFile imageAuthor) throws IOException {
-        author.setImageAuthor(imageAuthor);
-        authorService.addAuthor(author);
+    public String addAuthor(@ModelAttribute("author") Author author,@RequestParam("fullName") String fullName, @RequestParam("imageAuthor") MultipartFile imageAuthor) throws IOException {
+//        author.setImageAuthor(imageAuthor);
+//        authorService.addAuthor(author);
+        System.out.println("Ім'я автора: " + fullName);
+
+        String apiKey = "AIzaSyA0a4psXqswxlFKSBeUiS4BgTditty5L9s";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=inauthor:" + fullName + "&key=" + apiKey;
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()){
+            String responseBody = response.getBody();
+        }
         return "redirect:/main/main";
     }
 
