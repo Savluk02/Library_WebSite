@@ -22,7 +22,26 @@
         </div>
     </header>
 
-
+    <h2>Результати пошуку книг автора</h2>
+    <div th:if="${searchResults != null}">
+        <ul>
+            <li>
+                <div th:if="${searchResults['items'] != null and searchResults['items'].size() > 0}">
+                    <div th:with="firstItem=${searchResults['items'][0]}">
+                        <div th:if="${firstItem['volumeInfo'] != null}">
+                            <h3 th:text="${firstItem['volumeInfo']['title']}">Назва книги</h3>
+                            <p th:text="${firstItem['volumeInfo']['authors'][0]}">Автор</p>
+                            <p th:text="${firstItem['volumeInfo']['publishedDate']}">Рік публікації</p>
+                            <!-- Додайте інші поля за потреби -->
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div th:unless="${searchResults != null and searchResults['items'] != null and searchResults['items'].size() > 0}">
+        <p>Немає результатів пошуку.</p>
+    </div>
 
 </div>
 </body>

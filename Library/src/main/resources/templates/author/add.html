@@ -21,29 +21,29 @@
             <a th:href="@{/person/person}">[[${#request.remoteUser}]]</a>
         </div>
     </header>
-
-    <form th:method="POST" th:action="@{/author/add}" enctype="multipart/form-data" th:object="${author}" >
+<!-- enctype="multipart/form-data"-->
+    <form th:method="POST" th:action="@{/author/add}" th:object="${author}" >
         <h3>Add Author</h3>
 
-        <label for="dateOfBirth">Веддіть дату народження: </label>
-        <input type="text" th:field="*{dateOfBirth}" id="dateOfBirth"/>
-        <div style="color: red" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{password}">Помилка при введені
-            пароля
-        </div>
+<!--        <label for="dateOfBirth">Веддіть дату народження: </label>-->
+<!--        <input type="text" th:field="*{dateOfBirth}" id="dateOfBirth"/>-->
+<!--        <div style="color: red" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{password}">Помилка при введені-->
+<!--            пароля-->
+<!--        </div>-->
         <label for="fullName">Введіть ім'я автора: </label>
         <input type="text" th:field="*{fullName}" id="fullName"/>
         <div style="color: red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{username}">Помилка введення
             ім'я
             користувача
         </div>
-        <label for="national">Введіть національність: </label>
-        <input type="text" th:field="*{national}" id="national"/>
-        <div style="color: red" th:if="${#fields.hasErrors('national')}" th:errors="*{email}">Помилка при введені
-            email
-        </div>
+<!--        <label for="national">Введіть національність: </label>-->
+<!--        <input type="text" th:field="*{national}" id="national"/>-->
+<!--        <div style="color: red" th:if="${#fields.hasErrors('national')}" th:errors="*{email}">Помилка при введені-->
+<!--            email-->
+<!--        </div>-->
 
-        <label for="imageAuthor">Завантажте фотографію</label>
-        <input type="file" th:field="*{imageAuthor}" id="imageAuthor" name="imageAuthor"  accept="image/jpeg, image/png" />
+<!--        <label for="imageAuthor">Завантажте фотографію</label>-->
+<!--        <input type="file" th:field="*{imageAuthor}" id="imageAuthor" name="imageAuthor"  accept="image/jpeg, image/png" />-->
         <button type="submit">ADD !</button>
     </form>
 

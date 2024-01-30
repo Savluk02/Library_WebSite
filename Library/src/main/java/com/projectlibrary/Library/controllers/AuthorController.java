@@ -1,5 +1,8 @@
 package com.projectlibrary.Library.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectlibrary.Library.models.Author;
 import com.projectlibrary.Library.models.Book;
 import com.projectlibrary.Library.repositories.AuthorRepository;
@@ -43,8 +46,10 @@ public class AuthorController {
 
 //Створити html сторінку для пошуку
 //   Написати запит до Google Books
+//    @RequestParam("imageAuthor") MultipartFile imageAuthor,
     @PostMapping("/add")
-    public String addAuthor(@ModelAttribute("author") Author author,@RequestParam("fullName") String fullName, @RequestParam("imageAuthor") MultipartFile imageAuthor) throws IOException {
+    public String addAuthor(@ModelAttribute("author") Author author,@RequestParam("fullName") String fullName,
+                             Model model) throws IOException {
 //        author.setImageAuthor(imageAuthor);
 //        authorService.addAuthor(author);
         System.out.println("Ім'я автора: " + fullName);
@@ -58,8 +63,33 @@ public class AuthorController {
 
         if (response.getStatusCode().is2xxSuccessful()){
             String responseBody = response.getBody();
+            // Обробка отриманих даних з API
+            // Наприклад, ви можете використовувати Jackson або Gson для розбору JSON в об'єкти Java
+            // Приклад розбору JSON в об'єкти за допомогою Jackson:
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                JsonNode root = objectMapper.readTree(responseBody);
+                // Тут можна обробити отримані дані та передати їх у модель для відображення на сторінці
+                model.addAttribute("searchResults", root);
+                // Приклад передачі даних у модель
+                System.out.println("Дані отримано");
+
+            } catch (JsonProcessingException e) {
+                // Обробка помилок розбору JSON
+                System.out.println("Помилка з даними");
+                e.printStackTrace();
+            }
+        } else {
+            // Обробка помилки виклику Google Books API
+            System.out.println("Помилка виклику Google Books API: " + response.getStatusCode());
         }
-        return "redirect:/main/main";
+
+        return "author/search";
+    }
+
+    @GetMapping("/search")
+    public String searchAuthor(){
+        return "author/search";
     }
 
 
