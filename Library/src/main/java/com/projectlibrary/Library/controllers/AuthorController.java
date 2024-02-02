@@ -1,27 +1,31 @@
 package com.projectlibrary.Library.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projectlibrary.Library.models.Author;
 import com.projectlibrary.Library.models.Book;
-import com.projectlibrary.Library.repositories.AuthorRepository;
-import com.projectlibrary.Library.repositories.BookRepository;
 import com.projectlibrary.Library.services.AuthorService;
 import com.projectlibrary.Library.services.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -31,6 +35,7 @@ public class AuthorController {
     private final Logger logger = LoggerFactory.getLogger(AuthorController.class);
     private final AuthorService authorService;
     private final BookService bookService;
+
 
 
     @Autowired
@@ -43,55 +48,6 @@ public class AuthorController {
     public String mainAuthor(@ModelAttribute Author author) {
         return "author/add";
     }
-
-//Створити html сторінку для пошуку
-//   Написати запит до Google Books
-//    @RequestParam("imageAuthor") MultipartFile imageAuthor,
-    @PostMapping("/add")
-    public String addAuthor(@ModelAttribute("author") Author author,@RequestParam("fullName") String fullName,
-                             Model model) throws IOException {
-//        author.setImageAuthor(imageAuthor);
-//        authorService.addAuthor(author);
-        System.out.println("Ім'я автора: " + fullName);
-
-        String apiKey = "AIzaSyA0a4psXqswxlFKSBeUiS4BgTditty5L9s";
-        String url = "https://www.googleapis.com/books/v1/volumes?q=inauthor:" + fullName + "&key=" + apiKey;
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-
-        if (response.getStatusCode().is2xxSuccessful()){
-            String responseBody = response.getBody();
-            // Обробка отриманих даних з API
-            // Наприклад, ви можете використовувати Jackson або Gson для розбору JSON в об'єкти Java
-            // Приклад розбору JSON в об'єкти за допомогою Jackson:
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                JsonNode root = objectMapper.readTree(responseBody);
-                // Тут можна обробити отримані дані та передати їх у модель для відображення на сторінці
-                model.addAttribute("searchResults", root);
-                // Приклад передачі даних у модель
-                System.out.println("Дані отримано");
-
-            } catch (JsonProcessingException e) {
-                // Обробка помилок розбору JSON
-                System.out.println("Помилка з даними");
-                e.printStackTrace();
-            }
-        } else {
-            // Обробка помилки виклику Google Books API
-            System.out.println("Помилка виклику Google Books API: " + response.getStatusCode());
-        }
-
-        return "author/search";
-    }
-
-    @GetMapping("/search")
-    public String searchAuthor(){
-        return "author/search";
-    }
-
 
     @GetMapping("/{id}")
     public String showAuthor(@PathVariable("id") int authorId, Model model) {
@@ -137,15 +93,52 @@ public class AuthorController {
         return "author/addBook";
     }
 
-    @PostMapping("/{id}/addBook")
-    public String addBook(@ModelAttribute("book") Book book,
-                          @PathVariable("id") int authorId, Model model) {
-        Author author = authorService.findById(authorId);
-        bookService.addBook(book, author);
-        model.addAttribute("book", book);
+//    @MessageMapping("/update-search")
+//    public void updateSearch(){
+//
+//    }
 
-        return "redirect:/main/main";
+
+    @PostMapping("/search-book")
+    @MessageMapping("/books")
+    @SendTo("/topic/book")
+    public ResponseEntity<List<Book>> searchBook(@RequestParam("nameOfBook") String nameOfBook, Model model) throws JSONException {
+        List<Book> books = new ArrayList<>();
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            String key = "AIzaSyA0a4psXqswxlFKSBeUiS4BgTditty5L9s";
+            String URL = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(nameOfBook, StandardCharsets.UTF_8) + "&key=" + key;
+
+            ResponseEntity<String> responseEntity = restTemplate.getForEntity(URL, String.class);
+            JSONObject jsonObject = new JSONObject(responseEntity.getBody());
+            JSONArray items = jsonObject.getJSONArray("items");
+
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.getJSONObject(i);
+                JSONObject volumeInfo = item.getJSONObject("volumeInfo");
+                String title = volumeInfo.getString("title");
+                int pageCount = volumeInfo.getInt("pageCount");
+                int publishedDate = volumeInfo.getInt("publishedDate");
+                books.add(new Book(title, pageCount, publishedDate));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+        return ResponseEntity.ok(books);
     }
+
+//    @PostMapping("/{id}/addBook")
+//    public String addBook(@ModelAttribute("book") Book book,
+//                          @PathVariable("id") int authorId, Model model) {
+//        Author author = authorService.findById(authorId);
+//        bookService.addBook(book, author);
+//        model.addAttribute("book", book);
+//
+//        return "redirect:/main/main";
+//    }
 
 
     @PostMapping("/{id}")

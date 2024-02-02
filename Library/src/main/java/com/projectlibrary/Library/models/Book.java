@@ -1,6 +1,7 @@
 package com.projectlibrary.Library.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "book")
@@ -21,6 +22,7 @@ public class Book {
     @Column(name = "num_of_pages")
     private int numOfPages;
 
+
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private Author authorId;
@@ -28,6 +30,11 @@ public class Book {
 
 
     public Book() {
+    }
+    public Book(String nameOfBook, int numOfPages, int datoOfBook){
+        this.nameOfBook = nameOfBook;
+        this.numOfPages = numOfPages;
+        this.dateOfBook = datoOfBook;
     }
 
     public Book(String nameOfBook, String dateOfBook) {

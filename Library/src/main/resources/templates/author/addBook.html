@@ -22,29 +22,75 @@
         </div>
     </header>
 
-    <h2>Додайте автора і його книгу</h2>
+    <h2>Додайте книгу до автора</h2>
 
-    <form th:method="POST" th:action="@{/author/{authorId}/addBook(authorId=${author.id})}" th:object="${book}">
-        <h3>Add Book</h3>
-
-        <label for="nameOfBook">Веддіть назву книги: </label>
-        <input type="text" th:field="*{nameOfBook}" id="nameOfBook"/>
-        <div style="color: red" th:if="${#fields.hasErrors('nameOfBook')}" th:errors="*{nameOfBook}">Помилка при введені
-            пароля
-        </div>
-        <label for="dateOfBook">Введіть дату видання книги: </label>
-        <input type="date" th:field="*{dateOfBook}" id="dateOfBook"/>
-        <div style="color: red" th:if="${#fields.hasErrors('dateOfBook')}" th:errors="*{dateOfBook}">Помилка введення
-            ім'я
-            користувача
-        </div>
-        <label for="numOfPages">Введіть кількість сторінок: </label>
-        <input type="number" th:field="*{numOfPages}" id="numOfPages"/>
-        <div style="color: red" th:if="${#fields.hasErrors('numOfPages')}" th:errors="*{numOfPages}">Помилка при введені
-            email
-        </div>
-        <button type="submit">ADD !</button>
+    <form th:method="POST" th:action="@{/search-book}">
+        <label for="nameOfBook">Введіть назву книги: </label><br>
+        <input id="nameOfBook" name="nameOfBook" type="text" /> <br><br>
+        <input type="submit" value="Пошук" />
     </form>
+
+<!--    <div>-->
+<!--            <p id="bookName">-->
+
+<!--        </p>-->
+<!--    </div>-->
+    <div id="bookList"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script>
+        var socket = new SockJS('/socket');
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            stompClient.subscribe('/topic/books', function(response) {
+                var books = JSON.parse(response.body);
+                displayBooks(books);
+            });
+        });
+
+        function displayBooks(books) {
+            var bookList = document.getElementById("bookList");
+            bookList.innerHTML = "";
+
+            books.forEach(function(book) {
+                var title = document.createElement("p");
+                title.textContent = "Title: " + book.title;
+
+                var authors = document.createElement("p");
+                authors.textContent = "Authors: " + book.authors.join(", ");
+
+                var bookContainer = document.createElement("div");
+                bookContainer.appendChild(title);
+                bookContainer.appendChild(authors);
+
+                bookList.appendChild(bookContainer);
+            });
+        }
+    </script>
+<!--    <form th:method="POST" th:action="@{/author/{authorId}/addBook(authorId=${author.id})}" th:object="${book}">-->
+<!--        <h3>Add Book</h3>-->
+
+<!--        <label for="nameOfBook">Веддіть назву книги: </label>-->
+<!--        <input type="text" th:field="*{nameOfBook}" id="nameOfBook"/>-->
+<!--        <div style="color: red" th:if="${#fields.hasErrors('nameOfBook')}" th:errors="*{nameOfBook}">Помилка при введені-->
+<!--            пароля-->
+<!--        </div>-->
+<!--        <label for="dateOfBook">Введіть дату видання книги: </label>-->
+<!--        <input type="date" th:field="*{dateOfBook}" id="dateOfBook"/>-->
+<!--        <div style="color: red" th:if="${#fields.hasErrors('dateOfBook')}" th:errors="*{dateOfBook}">Помилка введення-->
+<!--            ім'я-->
+<!--            користувача-->
+<!--        </div>-->
+<!--        <label for="numOfPages">Введіть кількість сторінок: </label>-->
+<!--        <input type="number" th:field="*{numOfPages}" id="numOfPages"/>-->
+<!--        <div style="color: red" th:if="${#fields.hasErrors('numOfPages')}" th:errors="*{numOfPages}">Помилка при введені-->
+<!--            email-->
+<!--        </div>-->
+<!--        <button type="submit">ADD !</button>-->
+<!--    </form>-->
 
 </div>
 </body>
