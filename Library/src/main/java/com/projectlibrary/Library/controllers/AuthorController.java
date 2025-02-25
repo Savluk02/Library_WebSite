@@ -107,7 +107,7 @@ public class AuthorController {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
-            String key = "AIzaSyA0a4psXqswxlFKSBeUiS4BgTditty5L9s";
+            String key = "";
             String URL = "https://www.googleapis.com/books/v1/volumes?q=" + URLEncoder.encode(nameOfBook, StandardCharsets.UTF_8) + "&key=" + key;
 
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(URL, String.class);
